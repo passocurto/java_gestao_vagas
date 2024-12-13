@@ -15,4 +15,23 @@ jobs:
               with:
                 distribution: temurin
                 java-version: 17
+            - name: Build project
+              run: mvn clean install
+            - name: Login docker
+              run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+            - name: Build docker image
+              run: docker build -t passocurto/java_gestao_vagas .
+            - name: Publish image
+              run: docker push passocurto/java_gestao_vagas
+    deploy:
+      needs: build
+      runs-on: self-hosted
+      steps:
+        - name: Pull image docker hub
+          run: docker pull  passocurto/java_gestao_vagas:latest
+        - name: remove container
+          run: docker rm -f gestao-vagas
+        - name: Run docker container
+          run: DATABASE_URL=${{secrets.DATABASE_URL}} -e DATABASE_USERNAME=${{secrets.DATABASE_USERNAME}} -e  DATABASE_PASSWORD=${{secrets.DATABASE_PASSWORD}} --name gestao-vagas passocurto/java_gestao_vagas
+
             

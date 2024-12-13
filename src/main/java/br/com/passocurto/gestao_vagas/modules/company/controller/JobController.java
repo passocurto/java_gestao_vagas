@@ -3,7 +3,7 @@ package br.com.passocurto.gestao_vagas.modules.company.controller;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +14,7 @@ import br.com.passocurto.gestao_vagas.modules.company.dto.CreateJobDTO;
 import br.com.passocurto.gestao_vagas.modules.company.entities.JobEntity;
 import br.com.passocurto.gestao_vagas.modules.company.useCases.CreateJobUseCase;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
+
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -28,32 +28,31 @@ import jakarta.validation.Valid;
 @RequestMapping("/company/job")
 public class JobController {
 
-    @Autowired
-    private CreateJobUseCase createJobUseCase;
+        @Autowired
+        private CreateJobUseCase createJobUseCase;
 
-    @PostMapping
-    @PreAuthorize("hasRole('COMPANY')")
-    @Tag(name = "Candidato", description = "Inforções do candidato")
-    @Operation(summary = "Listagem de vagas disponível para o candidato", description = "Essa função é responsavel por listar todas as vagas baseada no filtro")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", content = {
-                    @Content(schema = @Schema(implementation = JobEntity.class))
-            })
-    })
-    @SecurityRequirement(name = "jwt_auth")
-    public JobEntity create(@Valid @RequestBody CreateJobDTO createJobDTO, HttpServletRequest request) {
+        @PostMapping("/")
+        @PreAuthorize("hasRole('COMPANY')")
+        @Tag(name = "Candidato", description = "Inforções do candidato")
+        @Operation(summary = "Listagem de vagas disponível para o candidato", description = "Essa função é responsavel por listar todas as vagas baseada no filtro")
+        @ApiResponses({
+                        @ApiResponse(responseCode = "200", content = {
+                                        @Content(schema = @Schema(implementation = JobEntity.class))
+                        })
+        })
+        @SecurityRequirement(name = "jwt_auth")
+        public JobEntity create(@Valid @RequestBody CreateJobDTO createJobDTO, HttpServletRequest request) {
 
-        var companyId = request.getAttribute("company_id");
+                var companyId = request.getAttribute("company_id");
 
-        var jobEntity = JobEntity.builder()
-                .benefits(createJobDTO.getBenefits())
-                .companyId(UUID.fromString(companyId.toString()))
-                .description(createJobDTO.getDescription())
-                .level(createJobDTO.getLevel())
-                .build();
+                var jobEntity = JobEntity.builder()
+                                .benefits(createJobDTO.getBenefits())
+                                .companyId(UUID.fromString(companyId.toString()))
+                                .description(createJobDTO.getDescription())
+                                .level(createJobDTO.getLevel())
+                                .build();
 
-        return this.createJobUseCase.execute(jobEntity);
-
-    }
+                return this.createJobUseCase.execute(jobEntity);
+        }
 
 }

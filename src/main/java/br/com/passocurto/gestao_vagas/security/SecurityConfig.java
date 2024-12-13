@@ -32,15 +32,17 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/company").permitAll()
+                            .requestMatchers("/company/**").permitAll()
                             .requestMatchers("/candidate").permitAll()
-                            .requestMatchers("/job").permitAll()
                             .requestMatchers("/company/auth").permitAll()
                             .requestMatchers("/candidate/auth").permitAll()
-                            .requestMatchers(PERMIT_ALL_LIST).permitAll();
+                            .requestMatchers(PERMIT_ALL_LIST).permitAll()
+                            .requestMatchers("/error").permitAll();
+
                     auth.anyRequest().authenticated();
                 })
-                .addFilterBefore(securityCandidateFilter, BasicAuthenticationFilter.class)
-                .addFilterBefore(securityFilter, BasicAuthenticationFilter.class);
+                .addFilterBefore(securityFilter, BasicAuthenticationFilter.class)
+                .addFilterBefore(securityCandidateFilter, BasicAuthenticationFilter.class);
 
         return http.build();
     }

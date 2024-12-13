@@ -39,13 +39,14 @@ public class AuthCompanyUseCase {
 
         var passwordMatch = this.passwordEncoder.matches(authCompanyDTO.getPassword(), company.getPassword());
 
+        // Se não for igual -> Erro
         if (!passwordMatch) {
             throw new AuthenticationException();
         }
+
+        // Se for igual -> gera o token
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
-
         var expires_in = Instant.now().plus(Duration.ofHours(2));
-
         var token = JWT.create().withIssuer("javagas")
                 .withSubject(company.getId().toString())
                 .withExpiresAt(expires_in)

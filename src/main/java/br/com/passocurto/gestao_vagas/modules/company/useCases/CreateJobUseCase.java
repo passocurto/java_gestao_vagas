@@ -1,10 +1,8 @@
 package br.com.passocurto.gestao_vagas.modules.company.useCases;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 
+import org.springframework.stereotype.Service;
 import br.com.passocurto.gestao_vagas.modules.company.entities.JobEntity;
 import br.com.passocurto.gestao_vagas.modules.company.repositories.JobRepository;
 
